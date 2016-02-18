@@ -15,4 +15,10 @@ class ZillowItem(Item):
     state = Field()
     zip = Field()
     url = Field()
+    sold_date = Field()
+    price = Field()
+    price_sqt = Field()
+    beds = Field()
+    lot = Field()
+    built_year = Field()
     pass
