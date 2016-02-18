@@ -16,39 +16,26 @@ class ZillowSpider(CrawlSpider) :
         Rule(LinkExtractor(allow=(), allow_domains=('zillow.com'),restrict_xpaths=('//a[@class="off"]',)), callback="parse_items", follow= True),
     )
 
+    def parse_start_url(self, response):
+        return self.parse_items(response)
+
     def parse_items(self, response):
         logger.info("RESPONSE URL: %s", response.url)
         extract_url = LinkExtractor(allow=(), allow_domains=('zillow.com'),restrict_xpaths=('//a[@class="off"]',)).extract_links(response)
         logger.info("XXXXXXXXXXX extracted URL: %s", extract_url)
         return self.extract_summary(response)
-#        hxs = HtmlXPathSelector(response)
-#        contents = hxs.xpath('//dt[@class="property-address"]//a')
-#        items =[]
-#        domain_name = "http://www.zillow.com"
-#        url = domain_name+str(hxs.xpath('//a[@class="off"]/@href').extract()).strip('u\'[]')
-#        for content in contents:
-#            item = ZillowItem()
-#            item["addr"] = content.xpath('span[@itemprop="streetAddress"]/text()').extract()
-#            item["city"] = content.xpath('span[@itemprop="addressLocality"]/text()').extract()
-#            item["state"] = content.xpath('span[@itemprop="addressRegion"]/text()').extract()
-#            item["zip"] = content.xpath('span[@itemprop="postalCode"]/text()').extract()
-#            item["url"] = content.xpath('@href').extract()
-#            logger.info("Addr %s", item['addr'])
-#            items.append(item)
-#        return (items)
  
     def extract_summary(self, response):
         logger.info("Start retrieve summary")
         hxs = HtmlXPathSelector(response)
         content = hxs.xpath('//div[@class="property-listing-data"]')
         items = []
-#        for content in contents:
         addr_block = content.xpath('//dt[@class="property-address"]//a')
         sold_price = content.xpath('//dt[@class="listing-type zsg-content_collapsed"]/text()')
         price_sqt = content.xpath('//dt[@class="zsg-fineprint"]/text()')
         sold_date = content.xpath('//dt[@class="sold-date zsg-fineprint"]/text()')
         property_data = content.xpath('//dt[@class="property-data"]')
-        for i in range(len(addr_block)):
+        for i in range(len(content)):
             item = ZillowItem()
             item["addr"] = addr_block[i].xpath('span[@itemprop="streetAddress"]/text()').extract()
             item["city"] = addr_block[i].xpath('span[@itemprop="addressLocality"]/text()').extract()
