@@ -38,6 +38,7 @@ class ZillowSpider(CrawlSpider) :
         hxs = HtmlXPathSelector(response)
         content = hxs.xpath('//div[@class="property-listing-data"]')
         items = []
+        req_list = []
         addr_block = content.xpath('//dt[@class="property-address"]//a')
         sold_price = content.xpath('//dt[@class="listing-type zsg-content_collapsed"]/text()')
         price_sqt = content.xpath('//dt[@class="zsg-fineprint"]/text()')
@@ -58,7 +59,9 @@ class ZillowSpider(CrawlSpider) :
             item["beds"] = property_data[i].xpath('span[@class="beds-baths-sqft"]/text()').extract()
             item["lot"] = property_data[i].xpath('span[@class="lot-size"]/text()').extract()
             item["built_year"] = property_data[i].xpath('span[@class="built-year"]/text()').extract()
-            yield Request(url, meta= {'item':item, 'items':items},callback=self.extract_details)
+            req_list.append(Request(url, meta= {'item':item, 'items':items, 'parent':response.url, 'loop':i},callback=self.extract_details))
+        return req_list
+#            yield Request(url, meta= {'item':item, 'items':items, 'parent':response.url, 'loop':i},callback=self.extract_details)
 #            items.append(item)
 #            logger.info("111111111111111111111: After Yeild")
 #        return items
@@ -66,14 +69,17 @@ class ZillowSpider(CrawlSpider) :
     def extract_details(self, response):
         hxs = HtmlXPathSelector(response)
         item = response.meta['item']
-        items = response.meta['items']
+        items = []
+#        items = response.meta['items']
+        logger.info("XXXXXXX parent URL %s, LOOP: %d, ADDR:%s", response.meta['parent'], response.meta['loop'], item["addr"])
         item["facts"] = hxs.xpath('//ul[@class="zsg-list_square zsg-lg-1-3 zsg-md-1-2 zsg-sm-1-1"]/li/text()').extract()
         zest = hxs.xpath('//div[@class="zest-value"]/text()').extract()
         item["zest_sale"] = zest[0]
         item["zest_rent"] = zest[1]
         school_info = hxs.xpath('//ul[@class="nearby-schools-list"]')
         school_name = school_info.xpath('//a[@class="za-track-event school-name notranslate"]/text()').extract()
-        school_rating = school_info.xpath('//span[@class="gs-rating-number gs-rating-10"]/text()').extract()
+#        school_rating = school_info.xpath('//span[@class="gs-rating-number gs-rating-10"]/text()').extract()
+        school_rating = school_info.xpath('//*[starts-with(@class, "gs-rating-number")]/text()').extract()
         school_grade = school_info.xpath('//div[@class="nearby-schools-grades"]/text()').extract()
         school_len = len(school_name)
         if school_len == 1:
