@@ -1,0 +1,38 @@
+Crawl Redfin listing information.
+
+Types: New Listing, Sold. For New Listing, we can always crawl it. For Sold and initial setup, we crawl all at once. For Sold and Update, we crawl recent sold.
+
+Starting URL Feed: We define a function start_url_load() to load starting URLs. 
+
+Example: 
+
+Crawling Sold all for Cupertino CA
+
+allowed_domain: www.redfin.com
+
+Starting URL: https://www.redfin.com/city/4561/CA/Cupertino/filter/include=sold-all
+
+Rules: <a class="selected goToPage" or <a class="clickable goToPage", follow=TRUE. We iterate all pages by simulating clicking Next.
+
+Selected goToPage Sample:
+
+<a class="selected goToPage" data-reactid=".1szsvqm3lz4.1.1:$table.3.1:$page0" data-rf-test-id="react-data-paginate-page-0" href="/city/4561/CA/Cupertino">1</a>
+
+Clickable goToPage:
+
+<a class="clickable goToPage" data-reactid=".1szsvqm3lz4.1.1:$table.3.1:$page1" data-rf-test-id="react-data-paginate-page-1" href="/city/4561/CA/Cupertino">2</a>
+
+When iterating all pages, we only retrieve URLs of each property. In this part, we don't retrieve any property information, because as in Zillow, retrieving property information is duplicate and is impacted by page layouts. 
+
+Sample:
+
+<div class="address" data-reactid=".1szsvqm3lz4.1.1:$table.1.0.1.$TableRow_1.$TableRowColumn_1.$address773092">
+	<a data-reactid=".1szsvqm3lz4.1.1:$table.1.0.1.$TableRow_1.$TableRowColumn_1.$address773092.$address773092" title="20800 Valley Green Dr, Cupertino, CA" href="/CA/Cupertino/20800-Valley-Green-Dr-95014/home/773092">20800 Valley Green Dr</a>
+</div>
+
+We can get //a[@data-reactid] and send HTTP requests to retrieve individual property information.
+
+In the parsing callback, we parse property information page for the following information:
+
+TBD
+
