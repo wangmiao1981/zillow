@@ -1,3 +1,7 @@
+ F. Webscraping of Listing & Property Data Is Not Allowed Crawling the Redfin.com and network sites is allowed for inclusion in web search engine results only. Webscraping, downloading or webcrawling of any property or other data for inclusion in another real estate search site, content aggregator, or any other purpose is strictly forbidden without prior written consent from Redfin.
+
+----Note: We won't be able to scrape Redfin data due to the above statement from Redfin. Below is a document about thinking how to collecting data in a web scrape way. It won't be implemented!! Anyone who wants to implement it is at his/her own obligation.
+
 Crawl Redfin listing information.
 
 Types: New Listing, Sold. For New Listing, we can always crawl it. For Sold and initial setup, we crawl all at once. For Sold and Update, we crawl recent sold.
@@ -34,5 +38,37 @@ We can get //a[@data-reactid] and send HTTP requests to retrieve individual prop
 
 In the parsing callback, we parse property information page for the following information:
 
-TBD
+Address
+
+Redfin Estimate: Active and Sold are different 
+
+On Redfin: Active only
+
+Sold Price/Price: Sold/Active
+
+Beds
+
+Baths
+
+Square Feet
+
+Price/sqft
+
+Built: Sold and Active locate at different places
+
+Overview
+
+Property Informatino Block
+
+Agent: Listing agent and Buyer agent (Sold only)
+
+Features
+
+Property History
+
+School Info
+
+Neighborhood Info
+
+Summary
 
