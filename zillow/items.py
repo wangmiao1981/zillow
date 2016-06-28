@@ -49,4 +49,5 @@ class ZillowZid(Item):
     zid = Field()
     longitude = Field()
     latitude = Field()
+    url = Field()
     pass
