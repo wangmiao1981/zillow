@@ -44,3 +44,9 @@ class ZillowItemDetail(Item):
     school_info2 = Field()
     school_info3 = Field()
     pass
+
+class ZillowZid(Item):
+    zid = Field()
+    longitude = Field()
+    latitude = Field()
+    pass
